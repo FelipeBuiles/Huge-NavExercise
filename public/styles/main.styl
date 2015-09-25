@@ -1,0 +1,291 @@
+@import "fonts.css";
+
+// Color definitions
+$magenta = #ec008c
+$lgray = #eee
+$tblack = rgba(0, 0, 0, 0.5)
+
+// Breakpoint definitions
+$desktop = 'screen and (min-width: 768px)'
+$mobile = 'screen and (max-width: 767px)'
+
+@-webkit-keyframes slideNav
+  0%
+    display none
+    left -100%
+  100%
+    display inline-flex
+    left 0
+
+body
+  margin 0
+  left 0
+  transition all .5s
+  position relative
+  width 100%
+
+  @media $desktop
+    button
+      display none
+
+  &.menu-open
+    #mask
+      display block
+
+    @media $mobile
+      overflow hidden
+      left calc(100% - 72px)
+
+      header
+        button
+          span
+            background-color transparent
+            &:before
+              top 0
+              transform rotate(45deg)
+            &:after
+              top 0
+              transform rotate(-45deg)
+
+        nav
+          animation slideNav .5s
+          position fixed
+          width calc(100% - 72px)
+          height 100vh
+          left 0
+          background-color white
+          display inline-flex
+          flex-direction column
+          #logo
+            display block
+
+header
+  background $magenta
+  height 60px
+  @media $desktop
+    height 72px
+
+  nav
+    animation slideNav .5s
+    display flex
+    flex-wrap wrap
+    flex-direction row
+    @media $desktop
+      display inline-flex
+      flex-direction row
+      justify-content space-around
+      align-items center
+
+    ul
+      margin 0
+
+    @media $mobile
+      display none
+      flex-direction column
+      width 0
+      left -100%
+
+    li
+      list-style-type none
+      height 24px
+      margin 0
+      font 24px HUGEAvantGardeBold
+      text-align center
+      padding 24px
+      transition .3s background-color
+      float left
+
+      a
+        text-decoration none
+        color white
+        margin 0
+        width 100%
+        height 100%
+
+    @media $mobile
+      li
+        a
+          color black
+          float left
+        &:hover
+          background-color $lgray
+
+    #logo
+      height 72px
+      left 0
+      position relative
+      @media $mobile
+        height 60px
+        display none
+      background-color $magenta
+
+      img
+        margin-top 20px
+        height 20px
+        width 50px
+        padding-left 24px
+        @media $desktop
+          margin-top 24px
+          height 24px
+          width 60px
+          padding-left 24px
+          padding-right 48px
+
+  button
+    background $magenta
+    -webkit-appearance none
+    appearance none
+    cursor pointer
+    border 0
+    padding 0
+
+    &#menuBtn
+      width 72px
+      height 60px
+
+    span, span:before, span:after
+      transition all .5s
+      margin-left 24px
+      display block
+      background-color white
+      height 4px
+      width 24px
+      margin-bottom 4px
+      content ''
+      position absolute
+      &:before
+        top -8px
+        margin 0
+      &:after
+        bottom -8px
+        margin 0
+
+/* Sub Menus */
+// for Desktop
+@media $desktop
+  nav
+    li
+      position relative
+      ul
+        padding 0
+        position absolute
+        display none
+        left 0
+        background-color white
+        top 72px
+        z-index 50
+        li
+          text-align left
+          background-color white
+          padding 0
+          height 48px
+      &:hover, &.active
+        background-color white
+        a
+          color $magenta
+      &.active
+        ul
+          display block
+          a
+            color $magenta
+          li
+            display block
+            width 100%
+            a
+              display block
+              font 16px GalaxieCopernicus
+              color black
+              padding 12px 24px
+              position relative
+              text-align left
+              top 0
+              left 0
+              white-space pre
+            &:first-child
+              margin-top 12px
+
+            &:hover
+              background-color $lgray
+              a
+                color $magenta
+
+// for Mobile
+@media $mobile
+  nav
+    li
+      a
+        text-align left
+      &:first-child
+        margin-top 12px
+      ul
+        display none
+
+
+#content
+  display flex
+  flex-direction column
+  justify-content center
+  overflow hidden
+
+  #cover
+    background-image url('../images/background-image.jpg')
+    background-size cover
+    background-repeat no-repeat
+    height 240px
+    width 100%
+    @media $desktop
+      height 640px
+    margin 0
+    img
+      width 100%
+      height 100%
+
+  #title
+    width 100%
+    text-align center
+    display flex
+    justify-content center
+    h1
+      float left
+      max-width 968px
+      font-family HUGEAvantGardeBold
+      width 100%
+      max-width 968px
+      text-overflow ellipsis
+      font-size 48px
+      margin 50px auto 0 auto
+      text-align left
+      padding-left 24px
+      @media $desktop
+        text-align center
+        font-size 132px
+        position absolute
+        padding 0
+        top 50vh
+        transform translate(-50%, -50%)
+        color white
+  #paragraph
+    max-width 968px
+    margin 50px 24px
+    align-self center
+    p
+      font-family GalaxieCopernicus-Book
+      font-size 20px
+      position relative
+      text-align justify
+      max-width 100%
+      margin 0
+      @media $desktop
+        font-size 36px
+
+#mask
+  position absolute
+  margin 60px 0 0 0
+  @media $desktop
+    margin-top 72px
+  top 0
+  background-color $tblack
+  height 100vh
+  width 100%
+  display none
+  z-index 40
