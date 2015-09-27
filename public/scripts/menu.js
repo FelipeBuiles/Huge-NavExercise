@@ -1,32 +1,31 @@
+// This toggles the site between the 2 states, sidenav/menu open or not
 function toggleMenu() {
   var body = document.body;
-  toggleClass(body, 'menu-open')
+  body.classList.toggle('menu-open');
 }
 
+/* This is called whenever a primary navigation link with a submenu is clicked
+ * It triggers the visibility of the content and toggles the state of the site
+ */
 function openSubmenu(event) {
-  if(document.body.classList.contains('menu-open')) closeMenus();
-  var element = event.target;
-  console.log(element)
-  toggleClass(element, 'active')
+  // check if the li or the a inside it was clicked, and trigger the class of the li only
+  var element = event.target.tagName == 'A' ? event.target.parentElement : event.target;
+  if(document.body.classList.contains('menu-open')) closeMenus(element);
+  element.classList.toggle('active');
   toggleMenu();
 }
 
-function toggleClass(el, cl) {
-  if(el.classList.contains(cl)) {
-    el.classList.remove(cl);
-  } else {
-    el.classList.add(cl);
-  }
-}
-
-function closeMenus() {
+// This closes everything but the element that was clicked
+function closeMenus(element) {
   document.body.classList.remove('menu-open');
   var elements = document.querySelectorAll('.active');
   [].forEach.call(elements, function(el) {
-    el.classList.remove('active');
+    // make sure not to remove the active class of the clicked element
+    if(el != element) el.classList.remove('active');
   })
 }
 
+// Shamelessly copypasted from an html5rocks.com tutorial on promises
 function get(url) {
   // Return a new promise.
   return new Promise(function(resolve, reject) {
@@ -58,6 +57,9 @@ function get(url) {
   });
 }
 
+/* This takes the response from the request to the json containing the
+ * navigation and builds the nav element with it
+ */
 function buildMenus(response) {
   items = JSON.parse(response).items;
   var nav = document.querySelector('#navigation');
@@ -67,6 +69,7 @@ function buildMenus(response) {
 }
 
 function buildSubMenu(item, parent) {
+  // create a new element with the contents of item
   var li = document.createElement('li');
   var a = document.createElement('a');
   a.innerText = item.label;
@@ -83,7 +86,11 @@ function buildSubMenu(item, parent) {
   } else {
     a.href = item.url;
   }
-  parent.appendChild(li);
+  if(parent.tagName == 'NAV') {
+    parent.insertBefore(li, document.querySelector('#copyright'))
+  } else {
+    parent.appendChild(li);
+  }
 }
 
 get('/api/nav.json').then(function(response) {

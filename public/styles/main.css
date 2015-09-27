@@ -1,14 +1,4 @@
 @import "fonts.css";
-@-webkit-keyframes slideNav {
-  0% {
-    display: none;
-    left: -100%;
-  }
-  100% {
-    display: inline-flex;
-    left: 0;
-  }
-}
 body {
   margin: 0;
   left: 0;
@@ -41,16 +31,23 @@ body.menu-open #mask {
     transform: rotate(-45deg);
   }
   body.menu-open header nav {
-    animation: slideNav 0.5s;
     position: fixed;
+/* same as above, the sidenav should span the width of the page minus
+           * the width of the hamburguer icon
+           */
     width: calc(100% - 72px);
-    height: 100vh;
     left: 0;
     background-color: #fff;
     display: inline-flex;
     flex-direction: column;
   }
   body.menu-open header nav #logo {
+    display: block;
+  }
+  body.menu-open header nav li {
+    display: inline-block;
+  }
+  body.menu-open header nav span {
     display: block;
   }
 }
@@ -64,7 +61,6 @@ header {
   }
 }
 header nav {
-  animation: slideNav 0.5s;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -73,30 +69,140 @@ header nav {
   header nav {
     display: inline-flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: start;
     align-items: center;
   }
-}
-header nav ul {
-  margin: 0;
+  header nav li ul {
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    display: none;
+    left: 0;
+    background-color: #fff;
+    top: 72px;
+    z-index: 50;
+  }
+  header nav li ul li {
+    text-align: left;
+    background-color: #fff;
+    padding: 0;
+    height: 48px;
+  }
+  header nav li:hover,
+  header nav li.active {
+    background-color: #fff;
+  }
+  header nav li:hover a,
+  header nav li.active a {
+    color: #ec008c;
+    height: 24px;
+  }
+  header nav li.active ul {
+    display: block;
+  }
+  header nav li.active ul a {
+    color: #ec008c;
+  }
+  header nav li.active ul li {
+    display: block;
+    width: 100%;
+  }
+  header nav li.active ul li a {
+    display: block;
+    font: 16px GalaxieCopernicus;
+    color: #000;
+    padding: 12px 24px;
+    position: relative;
+    text-align: left;
+    top: 0;
+    left: 0;
+    white-space: pre;
+  }
+  header nav li.active ul li:hover {
+    background-color: #eee;
+  }
+  header nav li.active ul li:hover a {
+    color: #ec008c;
+  }
 }
 @media screen and (max-width: 767px) {
   header nav {
-    display: none;
     flex-direction: column;
+    flex-wrap: nowrap;
     width: 0;
     left: -100%;
+    transition: left 0.5s, width 0.5s;
+  }
+  header nav li {
+    display: none;
+    z-index: 40;
+    height: 24px;
+  }
+  header nav li a {
+    text-align: left;
+    color: #000 !important;
+    float: left;
+  }
+  header nav li:first-child {
+    margin-top: 12px;
+  }
+  header nav li ul {
+    display: inline-flex;
+    flex-direction: column;
+    visibility: collapse;
+    height: 0;
+    transition: height 1s linear;
+    width: 100%;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    left: 0;
+  }
+  header nav li ul li {
+    height: 48px;
+    width: calc(100vw - 96px);
+    position: relative;
+    padding: 0;
+    z-index: 50;
+  }
+  header nav li ul li a {
+    font: 20px GalaxieCopernicus;
+    padding: 12px 0;
+    margin: 0;
+    height: 24px;
+    width: 100%;
+  }
+  header nav li ul li:hover {
+    background-color: #eee;
+  }
+  header nav li ul li:hover a {
+    color: #ec008c !important;
+  }
+  header nav li.active {
+    padding-bottom: 0;
+    height: auto;
+  }
+  header nav li.active ul {
+    margin: 0;
+    visibility: visible;
+    height: auto;
+  }
+  header nav li.active ul li {
+    margin-left: -24px;
+    padding-left: 24px;
   }
 }
 header nav li {
   list-style-type: none;
-  height: 24px;
   margin: 0;
   font: 24px HUGEAvantGardeBold;
   text-align: center;
   padding: 24px;
   transition: 0.3s background-color;
-  float: left;
+  position: relative;
+}
+header nav li:first-child {
+  margin-top: 12px;
 }
 header nav li a {
   text-decoration: none;
@@ -104,15 +210,6 @@ header nav li a {
   margin: 0;
   width: 100%;
   height: 100%;
-}
-@media screen and (max-width: 767px) {
-  header nav li a {
-    color: #000;
-    float: left;
-  }
-  header nav li:hover {
-    background-color: #eee;
-  }
 }
 header nav #logo {
   height: 72px;
@@ -140,6 +237,17 @@ header nav #logo img {
     padding-left: 24px;
     padding-right: 48px;
   }
+}
+header nav span {
+  font-family: 'Helvetica Neue', HelveticaNeue, sans-serif;
+  font-size: 16px;
+  bottom: 0;
+  position: fixed;
+  height: 48px;
+  line-height: 48px;
+  width: 100%;
+  margin-left: 24px;
+  display: none;
 }
 header button {
   background: #ec008c;
@@ -177,76 +285,6 @@ header button span:before:after,
 header button span:after:after {
   bottom: -8px;
   margin: 0;
-}
-/* Sub Menus */
-@media screen and (min-width: 768px) {
-  nav li {
-    position: relative;
-  }
-  nav li ul {
-    padding: 0;
-    position: absolute;
-    display: none;
-    left: 0;
-    background-color: #fff;
-    top: 72px;
-    z-index: 50;
-  }
-  nav li ul li {
-    text-align: left;
-    background-color: #fff;
-    padding: 0;
-    height: 48px;
-  }
-  nav li:hover,
-  nav li.active {
-    background-color: #fff;
-  }
-  nav li:hover a,
-  nav li.active a {
-    color: #ec008c;
-  }
-  nav li.active ul {
-    display: block;
-  }
-  nav li.active ul a {
-    color: #ec008c;
-  }
-  nav li.active ul li {
-    display: block;
-    width: 100%;
-  }
-  nav li.active ul li a {
-    display: block;
-    font: 16px GalaxieCopernicus;
-    color: #000;
-    padding: 12px 24px;
-    position: relative;
-    text-align: left;
-    top: 0;
-    left: 0;
-    white-space: pre;
-  }
-  nav li.active ul li:first-child {
-    margin-top: 12px;
-  }
-  nav li.active ul li:hover {
-    background-color: #eee;
-  }
-  nav li.active ul li:hover a {
-    color: #ec008c;
-  }
-}
-@media screen and (max-width: 767px) {
-  nav li a {
-    text-align: left;
-  }
-  nav li:first-child {
-    margin-top: 12px;
-  }
-  nav li ul {
-    display: none;
-  }
 }
 #content {
   display: flex;
@@ -323,7 +361,7 @@ header button span:after:after {
   margin: 60px 0 0 0;
   top: 0;
   background-color: rgba(0,0,0,0.5);
-  height: 100vh;
+  height: 100%;
   width: 100%;
   display: none;
   z-index: 40;

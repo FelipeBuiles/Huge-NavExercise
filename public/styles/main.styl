@@ -9,14 +9,6 @@ $tblack = rgba(0, 0, 0, 0.5)
 $desktop = 'screen and (min-width: 768px)'
 $mobile = 'screen and (max-width: 767px)'
 
-@-webkit-keyframes slideNav
-  0%
-    display none
-    left -100%
-  100%
-    display inline-flex
-    left 0
-
 body
   margin 0
   left 0
@@ -34,11 +26,15 @@ body
 
     @media $mobile
       overflow hidden
+      /* when the sidenav menu is open, slide the body all the way to the right
+       *minus the width of the hamburguer button
+       */
       left calc(100% - 72px)
 
       header
         button
           span
+            //make the hamburguer button transform to an x by rotating the buns
             background-color transparent
             &:before
               top 0
@@ -48,15 +44,20 @@ body
               transform rotate(-45deg)
 
         nav
-          animation slideNav .5s
           position fixed
+          /* same as above, the sidenav should span the width of the page minus
+           * the width of the hamburguer icon
+           */
           width calc(100% - 72px)
-          height 100vh
           left 0
           background-color white
           display inline-flex
           flex-direction column
           #logo
+            display block
+          li
+            display inline-block
+          span
             display block
 
 header
@@ -66,34 +67,124 @@ header
     height 72px
 
   nav
-    animation slideNav .5s
     display flex
     flex-wrap wrap
     flex-direction row
+
     @media $desktop
       display inline-flex
       flex-direction row
-      justify-content space-around
+      justify-content start
       align-items center
 
-    ul
-      margin 0
+      li
+        ul
+          padding 0
+          margin 0
+          position absolute
+          display none
+          left 0
+          background-color white
+          top 72px
+          z-index 50
+          li
+            text-align left
+            background-color white
+            padding 0
+            height 48px
+        &:hover, &.active
+          background-color white
+          a
+            color $magenta
+            height 24px
+        &.active
+          ul
+            display block
+            a
+              color $magenta
+            li
+              display block
+              width 100%
+              a
+                display block
+                font 16px GalaxieCopernicus
+                color black
+                padding 12px 24px
+                position relative
+                text-align left
+                top 0
+                left 0
+                white-space pre
+
+              &:hover
+                background-color $lgray
+                a
+                  color $magenta
 
     @media $mobile
-      display none
       flex-direction column
+      flex-wrap nowrap
       width 0
       left -100%
-
+      transition left .5s, width .5s
+      li
+        display none
+        z-index 40
+        height 24px
+        a
+          text-align left
+          color black !important
+          float left
+        &:first-child
+          margin-top 12px
+        ul
+          display inline-flex
+          flex-direction column
+          visibility collapse
+          height 0
+          transition height 1s linear
+          width 100%
+          position relative
+          padding 0
+          margin 0
+          left 0
+          li
+            height 48px
+            width calc(100vw - 96px)
+            position relative
+            padding 0
+            z-index 50
+            a
+              font 20px GalaxieCopernicus
+              padding 12px 0
+              margin 0
+              height 24px
+              width 100%
+            &:hover
+              background-color $lgray
+              a
+                color $magenta !important
+        &.active
+          padding-bottom 0
+          height auto
+          ul
+            margin 0
+            visibility visible
+            height auto
+            li
+              // hackish way of making the li start from the left side but keep its margin
+              margin-left -24px
+              padding-left 24px
     li
       list-style-type none
-      height 24px
       margin 0
       font 24px HUGEAvantGardeBold
       text-align center
       padding 24px
       transition .3s background-color
-      float left
+      position relative
+      &:first-child
+        margin-top 12px
 
       a
         text-decoration none
@@ -101,14 +192,6 @@ header
         margin 0
         width 100%
         height 100%
-
-    @media $mobile
-      li
-        a
-          color black
-          float left
-        &:hover
-          background-color $lgray
 
     #logo
       height 72px
@@ -130,6 +213,17 @@ header
           width 60px
           padding-left 24px
           padding-right 48px
+
+    span
+      font-family 'Helvetica Neue', HelveticaNeue, sans-serif
+      font-size 16px
+      bottom 0
+      position fixed
+      height 48px
+      line-height 48px
+      width 100%
+      margin-left 24px
+      display none
 
   button
     background $magenta
@@ -159,67 +253,6 @@ header
       &:after
         bottom -8px
         margin 0
-
-/* Sub Menus */
-// for Desktop
-@media $desktop
-  nav
-    li
-      position relative
-      ul
-        padding 0
-        position absolute
-        display none
-        left 0
-        background-color white
-        top 72px
-        z-index 50
-        li
-          text-align left
-          background-color white
-          padding 0
-          height 48px
-      &:hover, &.active
-        background-color white
-        a
-          color $magenta
-      &.active
-        ul
-          display block
-          a
-            color $magenta
-          li
-            display block
-            width 100%
-            a
-              display block
-              font 16px GalaxieCopernicus
-              color black
-              padding 12px 24px
-              position relative
-              text-align left
-              top 0
-              left 0
-              white-space pre
-            &:first-child
-              margin-top 12px
-
-            &:hover
-              background-color $lgray
-              a
-                color $magenta
-
-// for Mobile
-@media $mobile
-  nav
-    li
-      a
-        text-align left
-      &:first-child
-        margin-top 12px
-      ul
-        display none
-
 
 #content
   display flex
@@ -285,7 +318,7 @@ header
     margin-top 72px
   top 0
   background-color $tblack
-  height 100vh
+  height 100%
   width 100%
   display none
   z-index 40
